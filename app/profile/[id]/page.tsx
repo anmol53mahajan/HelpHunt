@@ -19,6 +19,9 @@ import {
 import { Profile } from '@/lib/supabase'
 import ContactModal from '@/components/ContactModal'
 
+// Prevent static generation due to dynamic params
+export const dynamic = 'force-dynamic'
+
 export default function ProfileDetailPage() {
   const params = useParams()
   const profileId = params.id as string

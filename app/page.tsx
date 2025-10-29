@@ -1,6 +1,6 @@
 import Navbar from '@/components/Navbar'
 import Hero from '@/components/Hero'
-import CategoryGrid from '@/components/CategoryCard'
+import { CategoryGrid } from '@/components/CategoryCard'
 
 export default function HomePage() {
   return (

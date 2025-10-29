@@ -16,7 +16,6 @@ import {
   Calendar,
   Clock
 } from 'lucide-react'
-import { useReactMediaRecorder } from 'react-media-recorder'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -59,13 +58,11 @@ export default function RegisterPage() {
     audio: ''
   })
 
-  // Audio recording
-  const {
-    status: audioStatus,
-    startRecording: startAudioRecording,
-    stopRecording: stopAudioRecording,
-    mediaBlobUrl: audioBlobUrl,
-  } = useReactMediaRecorder({ audio: true, video: false })
+  // Audio recording state
+  const [audioStatus, setAudioStatus] = useState<'idle' | 'recording' | 'stopped'>('idle')
+  const [audioBlobUrl, setAudioBlobUrl] = useState<string | null>(null)
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
+  const audioChunksRef = useRef<Blob[]>([])
 
   const cameraRef = useRef<HTMLVideoElement>(null)
   const [isCameraActive, setIsCameraActive] = useState(false)
@@ -108,6 +105,47 @@ export default function RegisterPage() {
           setIsVerified(true)
         }
       }, 'image/jpeg')
+    }
+  }
+
+  const startAudioRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      const mediaRecorder = new MediaRecorder(stream)
+      mediaRecorderRef.current = mediaRecorder
+      audioChunksRef.current = []
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data)
+        }
+      }
+
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' })
+        const url = URL.createObjectURL(audioBlob)
+        setAudioBlobUrl(url)
+        
+        // Convert to file
+        const audioFile = new File([audioBlob], 'audio-intro.webm', { type: 'audio/webm' })
+        handleFileUpload('audio', audioFile)
+        
+        // Stop all tracks
+        stream.getTracks().forEach(track => track.stop())
+      }
+
+      mediaRecorder.start()
+      setAudioStatus('recording')
+    } catch (error) {
+      console.error('Error accessing microphone:', error)
+      alert('Could not access microphone. Please try again.')
+    }
+  }
+
+  const stopAudioRecording = () => {
+    if (mediaRecorderRef.current && audioStatus === 'recording') {
+      mediaRecorderRef.current.stop()
+      setAudioStatus('stopped')
     }
   }
 

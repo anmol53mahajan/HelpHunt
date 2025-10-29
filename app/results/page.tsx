@@ -7,6 +7,9 @@ import { Search, Filter, Star, MapPin, Clock, DollarSign, Shield } from 'lucide-
 import ProfileCard from '@/components/ProfileCard'
 import { Profile, EmployerRequest } from '@/lib/supabase'
 
+// Prevent static generation due to dynamic searchParams
+export const dynamic = 'force-dynamic'
+
 export default function ResultsPage() {
   const searchParams = useSearchParams()
   const reqId = searchParams.get('reqId')

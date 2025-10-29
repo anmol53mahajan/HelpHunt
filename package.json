@@ -20,7 +20,6 @@
     "openai": "^6.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-media-recorder": "^1.7.2",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
