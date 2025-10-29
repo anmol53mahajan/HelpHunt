@@ -1,0 +1,9 @@
+# Environment Variables for HelpHunt (No Auth Version)
+# Copy this file to .env.local and fill in your actual values
+
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+# Admin Access (create a secret key for admin panel)
+NEXT_PUBLIC_ADMIN_SECRET=your-secret-admin-key-here
